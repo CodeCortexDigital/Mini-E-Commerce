@@ -325,14 +325,165 @@ MIT License
 
 ---
 
-### 🔥 Next Step (PM Action)
+Perfect. Below is **SHORT, CLEAN, SOFTWARE-HOUSE–STYLE documentation** you can paste into **Docs / Jira / README / Notion**.
 
-If you want, I can now:
+No theory. No fluff.
+This is **exactly how PMs run Sprint-1**.
 
-1. Create **TASK LIST (Jira-style)** for both devs
-2. Define **Sprint-1 plan (7 days)**
-3. Write **Backend API checklist**
-4. Write **Frontend UI checklist**
-5. Prepare **Deployment checklist**
+---
 
-Just tell me **which one to do first** 👌
+# 📋 TASK LIST (Jira-Style)
+
+## 👨‍💻 Backend Developer – Tasks
+
+| ID    | Task                                      | Branch                    |
+| ----- | ----------------------------------------- | ------------------------- |
+| BE-01 | Project setup (Express, folder structure) | `feature/backend-setup`   |
+| BE-02 | MongoDB connection & env config           | `feature/db-connection`   |
+| BE-03 | User model & auth schema                  | `feature/user-model`      |
+| BE-04 | Register API (JWT + bcrypt)               | `feature/auth-register`   |
+| BE-05 | Login API (JWT)                           | `feature/auth-login`      |
+| BE-06 | Auth middleware (JWT verify)              | `feature/auth-middleware` |
+| BE-07 | Product model                             | `feature/product-model`   |
+| BE-08 | Product CRUD APIs                         | `feature/product-crud`    |
+| BE-09 | Role-based access (Admin/User)            | `feature/rbac`            |
+| BE-10 | API testing (Postman)                     | `feature/api-testing`     |
+
+---
+
+## 🎨 Frontend Developer – Tasks
+
+| ID    | Task                              | Branch                     |
+| ----- | --------------------------------- | -------------------------- |
+| FE-01 | React + Vite setup                | `feature/frontend-setup`   |
+| FE-02 | App routing structure             | `feature/app-routing`      |
+| FE-03 | Login UI                          | `feature/login-ui`         |
+| FE-04 | Register UI                       | `feature/register-ui`      |
+| FE-05 | API service (Axios config)        | `feature/api-service`      |
+| FE-06 | Auth integration (login/register) | `feature/auth-integration` |
+| FE-07 | Product listing UI                | `feature/product-list-ui`  |
+| FE-08 | Product card component            | `feature/product-card`     |
+| FE-09 | Protected routes                  | `feature/protected-routes` |
+| FE-10 | Basic responsive styling          | `feature/responsive-ui`    |
+
+---
+
+# 🗓️ Sprint-1 Plan (7 Days)
+
+### 🎯 Sprint Goal
+
+**Working authentication + product listing (frontend & backend integrated)**
+
+### 📆 Day-Wise Plan
+
+**Day 1**
+
+* Repo clone
+* Project setup (FE + BE)
+
+**Day 2**
+
+* Auth APIs (Register/Login)
+* Login/Register UI
+
+**Day 3**
+
+* JWT middleware
+* Auth integration frontend ↔ backend
+
+**Day 4**
+
+* Product model
+* Product GET API
+
+**Day 5**
+
+* Product listing UI
+* API integration
+
+**Day 6**
+
+* Bug fixing
+* Validation
+* Cleanup
+
+**Day 7**
+
+* PM testing
+* Merge `dev → main`
+* Sprint review
+
+---
+
+# 🔌 Backend API Checklist (Sprint-1)
+
+✅ Express app setup
+✅ MongoDB connection
+✅ User schema (email, password, role)
+✅ Password hashing (bcrypt)
+✅ JWT generation
+✅ Register API
+✅ Login API
+✅ Auth middleware
+✅ Product schema
+✅ Product GET API
+✅ Error handling middleware
+✅ `.env` usage (no hardcoding)
+
+---
+
+# 🎨 Frontend UI Checklist (Sprint-1)
+
+✅ React app structure
+✅ Routing (React Router)
+✅ Login page UI
+✅ Register page UI
+✅ Form validation
+✅ Axios API client
+✅ Token storage (localStorage)
+✅ Protected routes
+✅ Product listing page
+✅ Product card component
+✅ Loading states
+✅ Mobile responsiveness (basic)
+
+---
+
+# 🚀 Deployment Checklist (Ready for Sprint-2)
+
+### Backend
+
+* [ ] `main` branch stable
+* [ ] `.env` set on server
+* [ ] MongoDB Atlas connected
+* [ ] Render/Railway auto-deploy
+* [ ] Health API tested
+
+### Frontend
+
+* [ ] Production build works
+* [ ] API URL updated
+* [ ] Vercel/Netlify deploy
+* [ ] Auth flow tested live
+
+### PM Final Check
+
+* [ ] No secrets in repo
+* [ ] Branch rules enforced
+* [ ] Version tag created
+
+---
+
+## 🔁 Sprint-1 Success Criteria
+
+✔ Login works
+✔ Register works
+✔ Products visible
+✔ Frontend ↔ Backend connected
+✔ Clean PRs
+✔ `main` stable
+
+---
+
+
+
