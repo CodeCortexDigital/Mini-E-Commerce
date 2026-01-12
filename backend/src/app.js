@@ -7,7 +7,10 @@ const testRoutes = require("./routes/testRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const productRoutes = require("./routes/productRoutes");
 const cartRoutes = require("./routes/cartRoutes");
-const orderRoutes = require("./routes/orderRoutes"); // ✅ ADD THIS
+const orderRoutes = require("./routes/orderRoutes");
+const wishlistRoutes = require("./routes/wishlistRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const userRoutes = require("./routes/userRoutes"); // ✅ NEW
 
 const app = express();
 
@@ -22,7 +25,10 @@ app.use("/api/test", testRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/api/orders", orderRoutes); // ✅ ADD THIS
+app.use("/api/orders", orderRoutes);
+app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/products", reviewRoutes);
+app.use("/api/users", userRoutes); // ✅ NEW
 
 /* ---------- Root ---------- */
 app.get("/", (req, res) => {

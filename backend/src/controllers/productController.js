@@ -21,10 +21,60 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-/* ---------- Get All Products (Public) ---------- */
+/* ---------- Get All Products (Public + Search/Filter/Sort) ---------- */
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const {
+      search,
+      category,
+      minPrice,
+      maxPrice,
+      minRating,
+      inStock,
+      sort,
+    } = req.query;
+
+    let query = {};
+
+    /* 🔍 Search (name, description, category) */
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    /* 🏷️ Category filter */
+    if (category) {
+      query.category = category;
+    }
+
+    /* 💰 Price range */
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    /* ⭐ Rating filter */
+    if (minRating) {
+      query.rating = { $gte: Number(minRating) };
+    }
+
+    /* 📦 In-stock filter */
+    if (inStock === "true") {
+      query.stock = { $gt: 0 };
+    }
+
+    /* 🔃 Sorting */
+    let sortOption = {};
+    if (sort === "price_asc") sortOption.price = 1;
+    if (sort === "price_desc") sortOption.price = -1;
+    if (sort === "rating") sortOption.rating = -1;
+    if (sort === "newest") sortOption.createdAt = -1;
+
+    const products = await Product.find(query).sort(sortOption);
 
     res.status(200).json({
       success: true,

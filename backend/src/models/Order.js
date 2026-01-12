@@ -38,8 +38,10 @@ const orderSchema = new mongoose.Schema(
       required: true,
     },
 
+    /* 🔐 ORDER STATUS (HARDENED) */
     status: {
       type: String,
+      enum: ["pending", "shipped", "delivered", "cancelled"],
       default: "pending",
     },
   },
