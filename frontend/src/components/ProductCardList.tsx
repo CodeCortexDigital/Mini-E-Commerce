@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useToast } from "../context/ToastContext";
+import { isAdmin } from "../utils/auth";
 import type { Product } from "../utils/products";
 
 type ProductCardListProps = {
@@ -18,6 +19,7 @@ const ProductCardList = ({ product, index = 0, onQuickView }: ProductCardListPro
   const { showToast } = useToast();
   const inWishlist = isInWishlist(product.id);
   const isOutOfStock = product.stock !== undefined && product.stock === 0;
+  const admin = isAdmin();
 
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -228,14 +230,16 @@ const ProductCardList = ({ product, index = 0, onQuickView }: ProductCardListPro
             >
               {isOutOfStock ? "Out of Stock" : "Add to Cart"}
             </motion.button>
-            <button
-              onClick={handleEdit}
-              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition transform hover:scale-105 font-semibold text-sm shadow-lg"
-              aria-label="Edit product"
-              title="Edit product"
-            >
-              ✏️ Edit
-            </button>
+            {admin && (
+              <button
+                onClick={handleEdit}
+                className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition transform hover:scale-105 font-semibold text-sm shadow-lg"
+                aria-label="Edit product"
+                title="Edit product"
+              >
+                ✏️ Edit
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -4,6 +4,8 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
+import { register as registerUser } from "../utils/auth";
+import { useToast } from "../context/ToastContext";
 
 type RegisterFormData = {
   name: string;
@@ -13,7 +15,9 @@ type RegisterFormData = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
   const {
     register,
     handleSubmit,
@@ -23,14 +27,23 @@ const Register = () => {
   
   const password = watch("password") || "";
 
-  const onSubmit = async (_data: RegisterFormData) => {
+  const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
+    setError("");
 
-    // Simulate API call (backend later)
+    // Simulate API call delay
     setTimeout(() => {
-      localStorage.setItem("isAuth", "true");
-      setIsLoading(false);
-      navigate("/dashboard");
+      const result = registerUser(data.name, data.email, data.password);
+      
+      if (result.success && result.user) {
+        setIsLoading(false);
+        showToast(`Account created successfully! Welcome ${result.user.name}!`, "success");
+        navigate("/dashboard");
+      } else {
+        setIsLoading(false);
+        setError(result.error || "Registration failed");
+        showToast(result.error || "Registration failed", "error");
+      }
     }, 1000);
   };
 
@@ -42,9 +55,15 @@ const Register = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl border-2 border-emerald-100"
       >
-        <h2 className="text-3xl font-extrabold mb-8 text-center bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-          Create Account
+        <h2 className="text-3xl font-extrabold mb-4 text-center bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+          Create Customer Account
         </h2>
+
+        <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3 mb-6 text-sm">
+          <p className="text-blue-800 font-medium text-center">
+            👤 Register as Customer • Admin login available on <Link to="/login" className="font-bold underline">Login page</Link>
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -118,6 +137,12 @@ const Register = () => {
             )}
             <PasswordStrengthMeter password={password} />
           </div>
+
+          {error && (
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+              {error}
+            </div>
+          )}
 
           <button
             type="submit"

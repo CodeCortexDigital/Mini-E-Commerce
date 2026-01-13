@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import AdminRoute from "./routes/AdminRoute";
 
 // Lazy load pages for code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -101,18 +102,18 @@ function App() {
       <Route
         path="/add-product"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <AddProduct />
-          </ProtectedRoute>
+          </AdminRoute>
         }
       />
 
       <Route
         path="/edit-product/:id"
         element={
-          <ProtectedRoute>
+          <AdminRoute>
             <AddProduct />
-          </ProtectedRoute>
+          </AdminRoute>
         }
       />
 

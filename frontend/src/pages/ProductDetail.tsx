@@ -7,6 +7,7 @@ import { useToast } from "../context/ToastContext";
 import LoadingSpinner from "../components/LoadingSpinner";
 import Footer from "../components/Footer";
 import ProductCard from "../components/ProductCard";
+import { isAdmin } from "../utils/auth";
 import { getProductById, getProducts, updateProduct } from "../utils/products";
 
 const ProductDetail = () => {
@@ -292,13 +293,15 @@ const ProductDetail = () => {
                     <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
                       {product.name}
                     </h1>
-                    <button
-                      onClick={() => navigate(`/edit-product/${product.id}`)}
-                      className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
-                      title="Edit product"
-                    >
-                      ✏️ Edit
-                    </button>
+                    {isAdmin() && (
+                      <button
+                        onClick={() => navigate(`/edit-product/${product.id}`)}
+                        className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+                        title="Edit product"
+                      >
+                        ✏️ Edit
+                      </button>
+                    )}
                   </div>
                 </div>
                 <button

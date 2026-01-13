@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { useToast } from "../context/ToastContext";
+import { isAdmin } from "../utils/auth";
 import type { Product } from "../utils/products";
 
 type ProductCardProps = {
@@ -18,6 +19,7 @@ const ProductCard = ({ product, index = 0, onQuickView }: ProductCardProps) => {
   const { showToast } = useToast();
   const inWishlist = isInWishlist(product.id);
   const isOutOfStock = product.stock !== undefined && product.stock === 0;
+  const admin = isAdmin();
 
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,14 +146,16 @@ const ProductCard = ({ product, index = 0, onQuickView }: ProductCardProps) => {
             🔗
           </button>
         </div>
-        <button
-          onClick={handleEdit}
-          className="absolute bottom-1.5 right-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-2 py-1 rounded-md transition transform hover:scale-110 z-10 shadow-lg font-semibold"
-          aria-label="Edit product"
-          title="Edit product"
-        >
-          ✏️ Edit
-        </button>
+        {admin && (
+          <button
+            onClick={handleEdit}
+            className="absolute bottom-1.5 right-1.5 bg-emerald-500 hover:bg-emerald-600 text-white text-xs px-2 py-1 rounded-md transition transform hover:scale-110 z-10 shadow-lg font-semibold"
+            aria-label="Edit product"
+            title="Edit product"
+          >
+            ✏️ Edit
+          </button>
+        )}
         {isOutOfStock && (
           <div className="absolute top-1.5 right-1.5 bg-red-600 text-white text-xs px-1.5 py-0.5 rounded-md z-10 font-semibold shadow-lg">
             Out of Stock

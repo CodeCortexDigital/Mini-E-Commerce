@@ -60,35 +60,10 @@ const Products = () => {
     };
   }, []);
 
-  // Fixed list of categories (at least 20+)
-  const categories = useMemo(() => [
-    "all",
-    "Grocery",
-    "Mobiles",
-    "Fashion",
-    "Electronics",
-    "Clothing",
-    "Accessories",
-    "Home & Furniture",
-    "Appliances",
-    "Travel",
-    "Beauty, Toys & More",
-    "Two Wheelers",
-    "Sports & Fitness",
-    "Books & Media",
-    "Health & Personal Care",
-    "Automotive",
-    "Pet Supplies",
-    "Office Supplies",
-    "Baby Products",
-    "Jewelry & Watches",
-    "Musical Instruments",
-    "Gaming",
-    "Outdoor & Camping",
-    "Kitchen & Dining",
-    "Tools & Hardware",
-    "Other"
-  ], []);
+  const categories = useMemo(() => {
+    const cats = new Set(products.map((p) => p.category || "Other"));
+    return ["all", ...Array.from(cats)];
+  }, [products]);
 
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products.filter((product) => {
@@ -149,23 +124,33 @@ const Products = () => {
         />
 
         <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 overflow-x-auto pb-2">
-            <div className="flex gap-3 min-w-max">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 rounded-xl transition-all font-semibold shadow-md hover:shadow-lg whitespace-nowrap ${
-                    selectedCategory === category
-                      ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-xl scale-105"
-                      : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:scale-105"
-                  }`}
-                >
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-3 flex-1">
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-3 rounded-xl transition-all font-semibold shadow-md hover:shadow-lg ${
+                  selectedCategory === category
+                    ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-xl scale-105"
+                    : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200 hover:scale-105"
+                }`}
+              >
+                {category.charAt(0).toUpperCase() + category.slice(1)}
+              </button>
+            ))}
           </div>
+
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortOption)}
+            className="px-5 py-3 border-2 border-emerald-200 rounded-xl focus:outline-none focus:ring-3 focus:ring-emerald-400 focus:border-emerald-400 bg-white text-emerald-700 font-semibold shadow-lg hover:shadow-xl transition-all"
+          >
+            <option value="default">Sort: Default</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="newest">Newest First</option>
+            <option value="rating">Highest Rated</option>
+          </select>
         </div>
       </div>
 
@@ -237,20 +222,7 @@ const Products = () => {
             <div className="text-sm text-gray-600">
               Showing {filteredAndSortedProducts.length} product{filteredAndSortedProducts.length !== 1 ? 's' : ''}
             </div>
-            <div className="flex items-center gap-3">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-5 py-3 border-2 border-emerald-200 rounded-xl focus:outline-none focus:ring-3 focus:ring-emerald-400 focus:border-emerald-400 bg-white text-emerald-700 font-semibold shadow-lg hover:shadow-xl transition-all"
-              >
-                <option value="default">Sort: Default</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="newest">Newest First</option>
-                <option value="rating">Highest Rated</option>
-              </select>
-              <ViewToggle view={viewMode} onViewChange={setViewMode} />
-            </div>
+            <ViewToggle view={viewMode} onViewChange={setViewMode} />
           </div>
           {viewMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

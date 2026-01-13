@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { login } from "../utils/auth";
+import { useToast } from "../context/ToastContext";
 
 type LoginFormData = {
   email: string;
@@ -11,21 +13,34 @@ type LoginFormData = {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { showToast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [loginType, setLoginType] = useState<"admin" | "customer">("customer");
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<LoginFormData>();
 
-  const onSubmit = async (_data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
+    setError("");
 
-    // Simulate API call (backend later)
+    // Simulate API call delay
     setTimeout(() => {
-      localStorage.setItem("isAuth", "true");
-      setIsLoading(false);
-      navigate("/dashboard");
+      const result = login(data.email, data.password);
+      
+      if (result.success && result.user) {
+        setIsLoading(false);
+        showToast(`Welcome ${result.user.role === "admin" ? "Admin" : result.user.name || "User"}!`, "success");
+        navigate("/dashboard");
+      } else {
+        setIsLoading(false);
+        setError(result.error || "Invalid credentials");
+        showToast(result.error || "Invalid credentials", "error");
+      }
     }, 1000);
   };
 
@@ -37,9 +52,58 @@ const Login = () => {
         transition={{ duration: 0.5 }}
         className="w-full max-w-md bg-white p-10 rounded-3xl shadow-2xl border-2 border-emerald-100"
       >
-        <h2 className="text-3xl font-extrabold mb-8 text-center bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+        <h2 className="text-3xl font-extrabold mb-6 text-center bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
           Login to Mini E-Commerce
         </h2>
+
+        {/* Role Selector */}
+        <div className="mb-6">
+          <div className="flex gap-2 bg-emerald-50 p-1 rounded-xl border-2 border-emerald-200">
+            <button
+              type="button"
+              onClick={() => {
+                setLoginType("customer");
+                setValue("email", "");
+                setValue("password", "");
+                setError("");
+              }}
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+                loginType === "customer"
+                  ? "bg-white text-emerald-700 shadow-md"
+                  : "text-emerald-600 hover:text-emerald-700"
+              }`}
+            >
+              👤 Customer
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setLoginType("admin");
+                setValue("email", "admin@commerce.com");
+                setValue("password", "admin123");
+                setError("");
+              }}
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
+                loginType === "admin"
+                  ? "bg-white text-emerald-700 shadow-md"
+                  : "text-emerald-600 hover:text-emerald-700"
+              }`}
+            >
+              👑 Admin
+            </button>
+          </div>
+          {loginType === "admin" && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-3 bg-amber-50 border-2 border-amber-200 rounded-lg p-3 text-sm"
+            >
+              <p className="text-amber-800 font-medium">
+                ⚠️ Admin credentials will be auto-filled
+              </p>
+            </motion.div>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
@@ -89,6 +153,27 @@ const Login = () => {
               </p>
             )}
           </div>
+
+          {error && (
+            <div className="bg-red-50 border-2 border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm font-medium">
+              {error}
+            </div>
+          )}
+
+          {loginType === "customer" && (
+            <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 text-sm">
+              <p className="font-semibold text-blue-800 mb-1">💡 Customer Login:</p>
+              <p className="text-blue-700">Use your registered email and password, or <Link to="/register" className="font-bold underline">create a new account</Link></p>
+            </div>
+          )}
+
+          {loginType === "admin" && (
+            <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 text-sm">
+              <p className="font-semibold text-amber-800 mb-1">🔐 Admin Credentials:</p>
+              <p className="text-amber-700"><strong>Email:</strong> admin@commerce.com</p>
+              <p className="text-amber-700"><strong>Password:</strong> admin123</p>
+            </div>
+          )}
 
           <button
             type="submit"

@@ -394,12 +394,12 @@ The production build will be in the `dist/` directory.
 ### 7. Filtering & Sorting
 
 **Filters:**
-- **Category:** All, Electronics, Clothing, Accessories, Other
+- **Category chips:** Dynamic categories generated from existing products (plus **All**)
 - **Price Range:** Slider (min/max)
 - **Minimum Rating:** Slider (0-5 stars)
 - **In Stock Only:** Checkbox
 
-**Sorting Options:**
+**Sorting Options (Products page top bar):**
 - Default
 - Price: Low to High
 - Price: High to Low
@@ -761,7 +761,7 @@ This section outlines potential enhancements and improvements you can add to mak
 
 - **Demo Mode** – Pre-filled data for testing
 - **UI Theme Preview** – Preview different themes
-- **LocalStorage Manager** – View/clear localStorage in UI
+- **LocalStorage Manager (optional, dev-only)** – Helper component (present in codebase but not mounted by default)
 - **Network Speed Simulator** – Test loading states
 
 ## 🧩 Additional Components

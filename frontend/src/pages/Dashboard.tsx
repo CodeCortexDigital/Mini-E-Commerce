@@ -8,16 +8,18 @@ import RecentlyViewed from "../components/RecentlyViewed";
 import CartDropdown from "../components/CartDropdown";
 import ProductComparison from "../components/ProductComparison";
 import ThemeToggle from "../components/ThemeToggle";
+import { getCurrentUser, logout as logoutUser, isAdmin } from "../utils/auth";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { cart } = useCart();
   const [showCartDropdown, setShowCartDropdown] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
+  const user = getCurrentUser();
+  const admin = isAdmin();
 
   const handleLogout = () => {
-    localStorage.removeItem("isAuth");
-    localStorage.removeItem("cart");
+    logoutUser();
     navigate("/login");
   };
 
@@ -41,21 +43,30 @@ const Dashboard = () => {
         className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white px-4 py-5 md:px-8 shadow-2xl"
       >
         <div className="flex justify-between items-center">
-          <h1 className="text-xl md:text-2xl font-bold tracking-tight">
-            🛍️ Mini E-Commerce Dashboard
-          </h1>
+          <div>
+            <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+              🛍️ Mini E-Commerce Dashboard
+            </h1>
+            {user && (
+              <p className="text-emerald-100 text-sm mt-1">
+                {admin ? "👑 Admin" : "👤 Customer"}: {user.name || user.email}
+              </p>
+            )}
+          </div>
 
           <div className="flex items-center gap-3 flex-wrap">
             <ThemeToggle />
             
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                to="/add-product"
-                className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl"
-              >
-                ➕ Add Product
-              </Link>
-            </motion.div>
+            {admin && (
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Link
+                  to="/add-product"
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-5 py-2.5 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl"
+                >
+                  ➕ Add Product
+                </Link>
+              </motion.div>
+            )}
 
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Link

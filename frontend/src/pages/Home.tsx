@@ -56,81 +56,49 @@ const Home = () => {
         </motion.div>
       </div>
 
-      {/* Special Offers Section */}
+      {/* Announcements */}
       <div className="bg-white py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <motion.h2
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-4xl font-extrabold text-center mb-12 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"
+            className="text-4xl font-extrabold text-center mb-8 bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent"
           >
-            🎉 Special Offers
+            📢 Important Announcements
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="text-4xl mb-4">🚚</div>
-              <h3 className="text-xl font-bold mb-2 text-emerald-800">Free Shipping</h3>
-              <p className="text-gray-700">
-                Get free shipping on orders over $50. No hidden fees, just fast delivery to your door.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="text-4xl mb-4">💳</div>
-              <h3 className="text-xl font-bold mb-2 text-emerald-800">Secure Payment</h3>
-              <p className="text-gray-700">
-                Shop with confidence. All transactions are encrypted and secure. Multiple payment options available.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-2xl p-6 border-2 border-emerald-200 shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="text-4xl mb-4">↩️</div>
-              <h3 className="text-xl font-bold mb-2 text-emerald-800">Easy Returns</h3>
-              <p className="text-gray-700">
-                Not satisfied? Return any item within 30 days for a full refund. Hassle-free returns process.
-              </p>
-            </motion.div>
-          </div>
-
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.4 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center mt-12"
+            className="bg-gradient-to-br from-emerald-50 via-white to-teal-50 rounded-2xl p-8 border-2 border-emerald-200 shadow-lg"
           >
-            <Link
-              to="/login"
-              className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-3 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl text-center"
-            >
-              Start Shopping
-            </Link>
-            <Link
-              to="/register"
-              className="bg-white text-emerald-600 border-2 border-emerald-600 hover:bg-emerald-50 px-8 py-3 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl text-center"
-            >
-              Create Account
-            </Link>
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold mb-4 text-emerald-800">
+                  Welcome to Our Store!
+                </h3>
+                <p className="text-lg text-gray-700 mb-4">
+                  Discover amazing products at great prices. Start shopping today and enjoy fast delivery and excellent customer service.
+                </p>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+                <Link
+                  to="/login"
+                  className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white px-8 py-3 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl text-center"
+                >
+                  Start Shopping
+                </Link>
+                <Link
+                  to="/register"
+                  className="bg-white text-emerald-600 border-2 border-emerald-600 hover:bg-emerald-50 px-8 py-3 rounded-xl transition-all font-semibold shadow-lg hover:shadow-xl text-center"
+                >
+                  Create Account
+                </Link>
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>
