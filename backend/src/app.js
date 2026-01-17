@@ -20,24 +20,26 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ---------- CORS (RENDER + VERCEL SAFE) ---------- */
+/* ---------- Security ---------- */
+app.use(helmet());
+
+/* ---------- CORS (FINAL FIX) ---------- */
 app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:5174",
       "http://127.0.0.1:5173",
-      "https://*.vercel.app",
+      "http://127.0.0.1:5174",
+
+      // ✅ Vercel frontend domains
+      "https://mini-e-commerce-livid.vercel.app",
+      "https://mini-e-commerce-aitx873d0-azhars-projects-61cd967e.vercel.app"
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
   })
 );
-
-/* ❌ REMOVE THIS (CRASH CAUSE)
-app.options("*", cors());
-*/
-
-/* ---------- Security ---------- */
-app.use(helmet());
 
 /* ---------- Routes ---------- */
 app.use("/api/auth", authRoutes);
@@ -54,20 +56,19 @@ app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Mini E-Commerce Backend is running",
+    message: "Mini E-Commerce Backend is running"
   });
 });
 
-/* ---------- Health Check ---------- */
+/* ---------- Health ---------- */
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Server is healthy",
-    timestamp: new Date().toISOString(),
+    timestamp: new Date().toISOString()
   });
 });
 
-/* ---------- Error Handler (LAST) ---------- */
+/* ---------- Error Handler ---------- */
 app.use(errorHandler);
 
 module.exports = app;
