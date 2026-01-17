@@ -58,7 +58,7 @@ exports.registerUser = async (req, res) => {
 };
 
 /* =========================================================
-   LOGIN USER  ✅ (FULLY FIXED)
+   LOGIN USER  ✅ FINAL & CLEAN
 ========================================================= */
 exports.loginUser = async (req, res) => {
   try {
@@ -71,10 +71,10 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    // 🔑 IMPORTANT: password explicitly select
+    // ✅ IMPORTANT: explicitly fetch password
     const user = await User.findOne({ email }).select("+password");
 
-    if (!user) {
+    if (!user || !user.password) {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",
@@ -101,6 +101,7 @@ exports.loginUser = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("LOGIN ERROR:", error);
     return res.status(500).json({
       success: false,
       message: error.message,
