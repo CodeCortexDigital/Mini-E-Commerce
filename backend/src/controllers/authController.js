@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 /* =========================================================
    Generate JWT Token
@@ -8,9 +9,7 @@ const generateToken = (id) => {
   return jwt.sign(
     { id },
     process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN || "1d",
-    }
+    { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
   );
 };
 
@@ -21,7 +20,7 @@ exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1. Validate input
+    // 1️⃣ Validate input
     if (!name || !email || !password) {
       return res.status(400).json({
         success: false,
@@ -29,7 +28,7 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // 2. Check if user already exists
+    // 2️⃣ Check existing user
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({
@@ -38,14 +37,18 @@ exports.registerUser = async (req, res) => {
       });
     }
 
-    // 3. Create user
+    // 3️⃣ HASH PASSWORD (🔥 MAIN FIX)
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 4️⃣ Create user
     const user = await User.create({
       name,
       email,
-      password,
+      password: hashedPassword,
+      role: "user",
     });
 
-    // 4. Send response
+    // 5️⃣ Response
     res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -59,7 +62,7 @@ exports.registerUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Register Error:", error.message);
+    console.error("Register Error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",
@@ -74,7 +77,7 @@ exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1. Validate input
+    // 1️⃣ Validate
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -82,7 +85,7 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    // 2. Find user with password
+    // 2️⃣ Find user with password
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(401).json({
@@ -91,8 +94,8 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    // 3. Compare password
-    const isMatch = await user.comparePassword(password);
+    // 3️⃣ Compare password
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
         success: false,
@@ -100,7 +103,7 @@ exports.loginUser = async (req, res) => {
       });
     }
 
-    // 4. Send response
+    // 4️⃣ Response
     res.status(200).json({
       success: true,
       message: "Login successful",
@@ -114,7 +117,7 @@ exports.loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Login Error:", error.message);
+    console.error("Login Error:", error);
     res.status(500).json({
       success: false,
       message: "Server error",
