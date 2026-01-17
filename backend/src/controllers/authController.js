@@ -58,7 +58,7 @@ exports.registerUser = async (req, res) => {
 };
 
 /* =========================================================
-   LOGIN USER
+   LOGIN USER  ✅ (FULLY FIXED)
 ========================================================= */
 exports.loginUser = async (req, res) => {
   try {
@@ -67,11 +67,13 @@ exports.loginUser = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         success: false,
-        message: "Email and password required",
+        message: "Email and password are required",
       });
     }
 
-    const user = await User.findOne({ email });
+    // 🔑 IMPORTANT: password explicitly select
+    const user = await User.findOne({ email }).select("+password");
+
     if (!user) {
       return res.status(401).json({
         success: false,
