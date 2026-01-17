@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
 
+/* ---------- Routes ---------- */
 const authRoutes = require("./routes/authRoutes");
 const testRoutes = require("./routes/testRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -12,36 +13,48 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const userRoutes = require("./routes/userRoutes");
 
+/* ---------- Middlewares ---------- */
 const errorHandler = require("./middlewares/errorMiddleware");
 
 const app = express();
 
-/* ---------- Body Parsers ---------- */
+/* =========================================================
+   Body Parsers
+========================================================= */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-/* ---------- Security ---------- */
+/* =========================================================
+   Security
+========================================================= */
 app.use(helmet());
 
-/* ---------- CORS (PRODUCTION SAFE) ---------- */
+/* =========================================================
+   CORS (LOCAL + VERCEL + PRODUCTION SAFE)
+========================================================= */
 app.use(
   cors({
     origin: [
+      // Localhost
       "http://localhost:5173",
       "http://localhost:5174",
       "http://127.0.0.1:5173",
       "http://127.0.0.1:5174",
 
-      // ✅ Vercel frontend domains
-      "https://mini-e-commerce-livid.vercel.app",
-      "https://mini-e-commerce-aitx873d0-azhars-projects-61cd967e.vercel.app",
+      // ✅ CURRENT VERCEL FRONTEND
+      "https://mini-e-commerce-olo8d40a8-azhars-projects-61cd967e.vercel.app",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
 );
 
-/* ---------- Routes ---------- */
+/* ---------- Preflight (VERY IMPORTANT) ---------- */
+app.options("*", cors());
+
+/* =========================================================
+   Routes
+========================================================= */
 app.use("/api/auth", authRoutes);
 app.use("/api/test", testRoutes);
 app.use("/api/admin", adminRoutes);
@@ -52,15 +65,19 @@ app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/users", userRoutes);
 
-/* ---------- Root ---------- */
+/* =========================================================
+   Root Route
+========================================================= */
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
-    message: "Mini E-Commerce Backend is running",
+    message: "Mini E-Commerce Backend is running 🚀",
   });
 });
 
-/* ---------- Health ---------- */
+/* =========================================================
+   Health Check
+========================================================= */
 app.get("/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -68,7 +85,9 @@ app.get("/health", (req, res) => {
   });
 });
 
-/* ---------- Error Handler ---------- */
+/* =========================================================
+   Error Handler (LAST)
+========================================================= */
 app.use(errorHandler);
 
 module.exports = app;
