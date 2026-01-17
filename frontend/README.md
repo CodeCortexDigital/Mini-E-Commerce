@@ -1,4 +1,6 @@
 # 🛍️ Mini E-Commerce Frontend
+# 🛍️ Mini E-Commerce Frontend
+# 🛍️ Mini E-Commerce Frontend
 
 A modern, fully-featured e-commerce frontend application built with React, TypeScript, and Tailwind CSS. This application provides a complete shopping experience with advanced features like product management, cart, wishlist, reviews, comparisons, and more.
 
