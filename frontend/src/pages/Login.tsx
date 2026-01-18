@@ -22,7 +22,7 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await api.post("/auth/login", {
+      const res = await api.post("/api/auth/login", {
         email,
         password,
       });
@@ -33,8 +33,9 @@ export default function Login() {
 
       navigate("/dashboard");
     } catch (err: any) {
+      console.error(err);
       setError(
-        err.response?.data?.message || "Invalid email or password"
+        err?.response?.data?.message || "Invalid email or password"
       );
     } finally {
       setLoading(false);
@@ -106,7 +107,6 @@ const styles = {
     color: "#fff",
     border: "none",
     borderRadius: 6,
-    cursor: "pointer",
   },
   error: {
     color: "red",
