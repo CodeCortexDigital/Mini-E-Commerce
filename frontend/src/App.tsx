@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
-import Login from "./pages/Login";
-// Lazy load pages for code splitting
+
+// Lazy loaded pages
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -27,95 +27,86 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/products"
-        element={
-          <ProtectedRoute>
-            <Products />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/products"
+          element={
+            <ProtectedRoute>
+              <Products />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/product/:id"
-        element={
-          <ProtectedRoute>
-            <ProductDetail />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/product/:id"
+          element={
+            <ProtectedRoute>
+              <ProductDetail />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/cart"
-        element={
-          <ProtectedRoute>
-            <Cart />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/cart"
+          element={
+            <ProtectedRoute>
+              <Cart />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/checkout"
-        element={
-          <ProtectedRoute>
-            <Checkout />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/checkout"
+          element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/orders"
-        element={
-          <ProtectedRoute>
-            <Orders />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/wishlist"
-        element={
-          <ProtectedRoute>
-            <Wishlist />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/profile"
-        element={
-          <ProtectedRoute>
-            <Profile />
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/add-product"
-        element={
-          <AdminRoute>
-            <AddProduct />
-          </AdminRoute>
-        }
-      />
-
-      <Route
-        path="/edit-product/:id"
-        element={
-          <AdminRoute>
-            <AddProduct />
-          </AdminRoute>
-        }
-      />
+        <Route
+          path="/add-product"
+          element={
+            <AdminRoute>
+              <AddProduct />
+            </AdminRoute>
+          }
+        />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-const API_URL = "https://mini-e-commerce-dxoh.onrender.com/api/auth/login";
+import api from "../utils/api";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -11,10 +10,8 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // reset error
     setError("");
 
     if (!email || !password) {
@@ -25,33 +22,22 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // IMPORTANT for Render + Vercel
-        body: JSON.stringify({ email, password }),
+      const res = await api.post("/auth/login", {
+        email: email.toLowerCase(),
+        password,
       });
 
-      const data = await res.json();
+      console.log("LOGIN SUCCESS:", res.data);
 
-      if (!res.ok) {
-        setError(data.message || "Login failed");
-        setLoading(false);
-        return;
-      }
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ SUCCESS
-      console.log("LOGIN SUCCESS:", data);
-
-      // optional: save user
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      navigate("/"); // or /dashboard
-    } catch (err) {
+      navigate("/dashboard");
+    } catch (err: any) {
       console.error(err);
-      setError("Server error. Try again.");
+
+      setError(
+        err?.response?.data?.message || "Invalid email or password"
+      );
     } finally {
       setLoading(false);
     }
@@ -92,7 +78,6 @@ export default function Login() {
   );
 }
 
-/* ---------- SIMPLE STYLES ---------- */
 const styles = {
   wrapper: {
     minHeight: "100vh",

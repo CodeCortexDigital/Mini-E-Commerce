@@ -1,9 +1,7 @@
 import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: "https://mini-e-commerce-dxoh.onrender.com/api",
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
