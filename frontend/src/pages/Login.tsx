@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../utils/api";
+import { useNavigate, Link } from "react-router-dom";
+import api from "../services/api"; // axios instance
 
-export default function Login() {
+const Login = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -10,54 +10,62 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      setLoading(true);
-
-      const res = await api.post("/auth/login", {
+      const res = await api.post("/api/auth/login", {
         email,
         password,
       });
 
-      // 🔴 VERY IMPORTANT: exact structure check
-      if (!res.data || !res.data.success) {
-        throw new Error("Invalid response from server");
-      }
-
       console.log("LOGIN RESPONSE:", res.data);
 
-      // ✅ save user
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      // ✅ IMPORTANT CHECK
+      if (res.data && res.data.success === true) {
+        // save user
+        localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      // ✅ redirect
-      navigate("/");
-    } catch (err: any) {
-      console.error("LOGIN ERROR:", err.response?.data || err.message);
+        // OPTIONAL: save token if backend sends
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+        }
 
-      setError(
-        err.response?.data?.message ||
-          "Login failed. Check email or password."
-      );
+        navigate("/dashboard");
+      } else {
+        setError("Login failed. Check email or password.");
+      }
+    } catch (err) {
+      console.error("LOGIN ERROR:", err);
+      setError("Login failed. Check email or password.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={styles.wrapper}>
-      <form onSubmit={handleSubmit} style={styles.card}>
-        <h2 style={{ textAlign: "center" }}>Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-6 rounded-lg shadow-md w-96"
+      >
+        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 mb-3 rounded">
+            {error}
+          </div>
+        )}
 
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full border p-2 mb-3 rounded"
           required
-          style={styles.input}
         />
 
         <input
@@ -65,61 +73,27 @@ export default function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="w-full border p-2 mb-3 rounded"
           required
-          style={styles.input}
         />
 
-        {error && <p style={styles.error}>{error}</p>}
-
-        <button type="submit" style={styles.button} disabled={loading}>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700"
+        >
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        <p style={{ textAlign: "center", marginTop: 10 }}>
-          Don’t have an account? <Link to="/register">Register</Link>
+        <p className="text-center mt-4 text-sm">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-green-600 font-semibold">
+            Register
+          </Link>
         </p>
       </form>
     </div>
   );
-}
-
-const styles = {
-  wrapper: {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#eefaf1",
-  },
-  card: {
-    width: 340,
-    padding: 24,
-    background: "#fff",
-    borderRadius: 8,
-    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
-  },
-  input: {
-    width: "100%",
-    padding: 12,
-    marginTop: 10,
-    borderRadius: 6,
-    border: "1px solid #ccc",
-    fontSize: 14,
-  },
-  button: {
-    width: "100%",
-    marginTop: 16,
-    padding: 12,
-    background: "#0a8f4d",
-    color: "#fff",
-    border: "none",
-    borderRadius: 6,
-    cursor: "pointer",
-    fontSize: 16,
-  },
-  error: {
-    color: "red",
-    marginTop: 10,
-    textAlign: "center",
-  },
 };
+
+export default Login;
