@@ -1,27 +1,38 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+const API_URL = "https://mini-e-commerce-dxoh.onrender.com/api/auth/login";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // reset error
     setError("");
-    setLoading(true);
+
+    if (!email || !password) {
+      setError("Email and password are required");
+      return;
+    }
 
     try {
-      const res = await fetch(
-        "https://mini-e-commerce-dxoh.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      setLoading(true);
+
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // IMPORTANT for Render + Vercel
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await res.json();
 
@@ -37,9 +48,7 @@ export default function Login() {
       // optional: save user
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // redirect
-      window.location.href = "/";
-
+      navigate("/"); // or /dashboard
     } catch (err) {
       console.error(err);
       setError("Server error. Try again.");
@@ -49,35 +58,16 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#f3fff7",
-      }}
-    >
-      <form
-        onSubmit={handleLogin}
-        style={{
-          width: "100%",
-          maxWidth: 400,
-          padding: 30,
-          background: "#fff",
-          borderRadius: 10,
-          boxShadow: "0 10px 30px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: 20 }}>Login</h2>
+    <div style={styles.wrapper}>
+      <form onSubmit={handleSubmit} style={styles.card}>
+        <h2 style={{ textAlign: "center" }}>Login</h2>
 
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          required
-          style={inputStyle}
+          style={styles.input}
         />
 
         <input
@@ -85,54 +75,61 @@ export default function Login() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          required
-          style={inputStyle}
+          style={styles.input}
         />
 
-        {error && (
-          <div
-            style={{
-              color: "red",
-              marginBottom: 10,
-              textAlign: "center",
-            }}
-          >
-            {error}
-          </div>
-        )}
+        {error && <p style={styles.error}>{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: "100%",
-            padding: 12,
-            background: "#0a8f4e",
-            color: "#fff",
-            border: "none",
-            borderRadius: 6,
-            cursor: "pointer",
-            fontSize: 16,
-          }}
-        >
+        <button type="submit" style={styles.button} disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        <p style={{ marginTop: 15, textAlign: "center" }}>
-          Don’t have an account?{" "}
-          <a href="/register" style={{ color: "#0a8f4e" }}>
-            Register
-          </a>
+        <p style={{ textAlign: "center", marginTop: 10 }}>
+          Don’t have an account? <Link to="/register">Register</Link>
         </p>
       </form>
     </div>
   );
 }
 
-const inputStyle = {
-  width: "100%",
-  padding: 12,
-  marginBottom: 12,
-  borderRadius: 6,
-  border: "1px solid #ccc",
+/* ---------- SIMPLE STYLES ---------- */
+const styles = {
+  wrapper: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "#eefaf1",
+  },
+  card: {
+    width: 350,
+    padding: 25,
+    background: "#fff",
+    borderRadius: 10,
+    boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+  },
+  input: {
+    width: "100%",
+    padding: 12,
+    marginTop: 10,
+    borderRadius: 6,
+    border: "1px solid #ccc",
+    fontSize: 14,
+  },
+  button: {
+    width: "100%",
+    marginTop: 15,
+    padding: 12,
+    background: "#0a8f4d",
+    color: "#fff",
+    border: "none",
+    borderRadius: 6,
+    cursor: "pointer",
+    fontSize: 16,
+  },
+  error: {
+    color: "red",
+    marginTop: 10,
+    textAlign: "center",
+  },
 };

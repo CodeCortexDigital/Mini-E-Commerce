@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import LoadingSpinner from "./components/LoadingSpinner";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
-
+import Login from "./pages/Login";
 // Lazy load pages for code splitting
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
