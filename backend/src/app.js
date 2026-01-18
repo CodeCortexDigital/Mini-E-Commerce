@@ -14,33 +14,18 @@ app.use(express.urlencoded({ extended: true }));
 /* ================= SECURITY ================= */
 app.use(helmet());
 
-/* ================= CORS (NODE 22 SAFE) ================= */
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://mini-e-commerce-c6xfu8dmi-azhars-projects-61cd967e.vercel.app",
-  "https://mini-e-commerce-p4g0std0j-azhars-projects-61cd967e.vercel.app",
-  "https://mini-e-commerce-dxoh.onrender.com",
-];
-
+/* ================= CORS (NO CALLBACK, NO THROW) ================= */
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.includes(origin)) return callback(null, true);
-      return callback(new Error("CORS not allowed"));
-    },
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://*.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 );
-
-/* ❌ VERY IMPORTANT
-   DO NOT ADD:
-   app.options("*", ...)
-   router.options("*", ...)
-*/
 
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
