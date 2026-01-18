@@ -14,34 +14,33 @@ app.use(express.urlencoded({ extended: true }));
 /* ================= SECURITY ================= */
 app.use(helmet());
 
-/* ================= CORS (FIXED) ================= */
+/* ================= CORS (NODE 22 SAFE) ================= */
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "https://mini-e-commerce-c6xfu8dmi-azhars-projects-61cd967e.vercel.app",
   "https://mini-e-commerce-p4g0std0j-azhars-projects-61cd967e.vercel.app",
+  "https://mini-e-commerce-dxoh.onrender.com",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // allow postman / server to server
+    origin: (origin, callback) => {
       if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed"));
-      }
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      return callback(new Error("CORS not allowed"));
     },
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-/* 🔥 VERY IMPORTANT — PRE-FLIGHT */
-app.options("*", cors());
+/* ❌ VERY IMPORTANT
+   DO NOT ADD:
+   app.options("*", ...)
+   router.options("*", ...)
+*/
 
 /* ================= ROUTES ================= */
 app.use("/api/auth", authRoutes);
